@@ -1,0 +1,100 @@
+body {
+  background-color: #222; 
+}
+
+.employee-list-container {
+  width: 90%;
+  margin: 50px auto;
+}
+
+.list-title {
+  font-size: 28px;
+  color: #fff;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.employee-table {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #333; /* Darker background color */
+}
+
+.employee-table th, .employee-table td {
+  padding: 12px;
+  border-bottom: 1px solid #555;
+  color: #fff;
+}
+
+.employee-table th {
+  background-color: #444;
+  font-weight: bold;
+  text-align: left;
+}
+
+.employee-table tbody tr:nth-child(even) {
+  background-color: #444;
+}
+
+.employee-table tbody tr:hover {
+  background-color: #555;
+}
+
+.edit-button, .delete-button, .update-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.3s;
+}
+
+.edit-button {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.delete-button {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.update-button {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.edit-button:hover, .delete-button:hover, .update-button:hover {
+  background-color: #0056b3;
+}
+
+.update-form {
+  background-color: #444;
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.update-form h2 {
+  font-size: 24px;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.update-form form {
+  display: flex;
+  flex-direction: column;
+}
+
+.update-form input {
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  border: none;
+  background-color: #333;
+  color: #fff;
+}
