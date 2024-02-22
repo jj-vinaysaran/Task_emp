@@ -26,7 +26,7 @@ const EmployeeList = () => {
   const fetchEmployees = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:5000/employees');
+      const response = await axios.get('https://task-emp.onrender.com/employees');
       setEmployees(response.data);
       setLoading(false);
     } catch (error) {
@@ -37,7 +37,7 @@ const EmployeeList = () => {
 
   const handleDelete = async (employeeId) => {
     try {
-      await axios.delete(`http://localhost:5000/employees/${employeeId}`);
+      await axios.delete(`https://task-emp.onrender.com/employees/${employeeId}`);
       setEmployees(employees.filter(employee => employee.id !== employeeId));
       alert('Employee deleted successfully!');
     } catch (error) {
@@ -54,7 +54,7 @@ const EmployeeList = () => {
 
   const handleUpdate = async () => {
     try {
-      await axios.put(`http://localhost:5000/employees/${selectedEmployeeId}`, updateFormData);
+      await axios.put(`https://task-emp.onrender.com/employees/${selectedEmployeeId}`, updateFormData);
       fetchEmployees();
       setIsUpdateFormVisible(false);
       alert('Employee updated successfully!');
