@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import './EmployeeList.css'; // Import CSS file for styling
 
 const EmployeeList = () => {
@@ -30,6 +29,7 @@ const EmployeeList = () => {
       setEmployees(response.data);
       setLoading(false);
     } catch (error) {
+      console.error('Error fetching employees:', error);
       setError('Failed to fetch employees');
       setLoading(false);
     }
@@ -41,7 +41,7 @@ const EmployeeList = () => {
       setEmployees(employees.filter(employee => employee.id !== employeeId));
       alert('Employee deleted successfully!');
     } catch (error) {
-      console.error('Failed to delete employee', error);
+      console.error('Failed to delete employee:', error);
       setError('Failed to delete employee');
     }
   };
@@ -52,14 +52,16 @@ const EmployeeList = () => {
     setIsUpdateFormVisible(true);
   };
 
-  const handleUpdate = async () => {
+  const handleUpdate = async (e) => {
+    e.preventDefault();
     try {
-      await axios.put(`https://task-emp.onrender.com/employees/${selectedEmployeeId}`, updateFormData);
+      const updatedEmployee = { ...updateFormData };
+      await axios.put(`https://task-emp.onrender.com/employees/${selectedEmployeeId}`, updatedEmployee);
       fetchEmployees();
       setIsUpdateFormVisible(false);
       alert('Employee updated successfully!');
     } catch (error) {
-      console.error('Failed to update employee', error);
+      console.error('Error updating employee:', error);
       setError('Failed to update employee');
     }
   };
@@ -68,8 +70,8 @@ const EmployeeList = () => {
     setUpdateFormData({ ...updateFormData, [e.target.name]: e.target.value });
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return <div className='loading'>Loading...</div>;
+  if (error) return <div className='Error'>Error: {error}</div>;
 
   return (
     <div className="employee-list-container">

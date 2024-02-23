@@ -11,19 +11,26 @@ app.use(bodyParser.json());
 app.use(cors());
 
 const db = mysql.createConnection({
-  host: 'b9yaynatxbsydsvgvz9x-mysql.services.clever-cloud.com',
-  user: 'uqyvrwhbv6fsmggi',
-  password: 'ex1KVVyMNR6Urx37iq6p',
-  database: 'b9yaynatxbsydsvgvz9x'
+  host: 'bde4zoi3bbkeqcmansvo-mysql.services.clever-cloud.com',
+  user: 'uota7nkpcyuxj8le',
+  password: 'UZtkeO7inb06rx1OhzO1',
+  database: 'bde4zoi3bbkeqcmansvo'
 });
 
 db.connect((err) => {
   if (err) {
+    console.error('Error connecting to MySQL:', err);
     throw err;
   }
   console.log('MySQL connected');
 });
 
+// Handle database connection errors
+db.on('error', (err) => {
+  console.error('MySQL connection error:', err);
+});
+
+// Add a new employee
 app.post('/api/employees', (req, res) => {
   const { name, employeeId, department, dob, gender, designation, salary } = req.body;
   if (!name || !employeeId || !department || !dob || !gender || !designation || !salary) {
@@ -39,7 +46,7 @@ app.post('/api/employees', (req, res) => {
     [name, employeeId, department, dob, gender, designation, salary],
     (err, result) => {
       if (err) {
-        console.log(err);
+        console.error('Error adding employee:', err);
         return res.status(500).json({ message: 'Failed to add employee' });
       }
       res.status(201).json({ message: 'Employee added successfully' });
@@ -47,51 +54,47 @@ app.post('/api/employees', (req, res) => {
   );
 });
 
+// Update an employee by ID
 app.put('/employees/:id', (req, res) => {
   const { name, employeeId, department, dob, gender, designation, salary } = req.body;
   const id = req.params.id;
-  
-  // Construct SQL query to update employee details
+
   const query = `UPDATE employees SET name = ?, employeeId = ?, department = ?, dob = ?, gender = ?, designation = ?, salary = ? WHERE id = ?`;
   
-  // Execute the query
   db.query(query, [name, employeeId, department, dob, gender, designation, salary, id], (err, result) => {
     if (err) {
       console.error('Error updating employee:', err);
-      res.status(500).send('Error updating employee');
+      res.status(500).json({ message: 'Error updating employee' });
     } else {
-      res.status(200).send('Employee updated successfully');
+      res.status(200).json({ message: 'Employee updated successfully' });
     }
   });
 });
 
-
+// Delete an employee by ID
 app.delete('/employees/:id', (req, res) => {
   const id = req.params.id;
 
-  // Construct SQL query to delete employee
   const query = `DELETE FROM employees WHERE id = ?`;
 
-  // Execute the query
   db.query(query, [id], (err, result) => {
     if (err) {
       console.error('Error deleting employee:', err);
-      res.status(500).send('Error deleting employee');
+      res.status(500).json({ message: 'Error deleting employee' });
     } else {
-      res.status(200).send('Employee deleted successfully');
+      res.status(200).json({ message: 'Employee deleted successfully' });
     }
   });
 });
 
+// Get all employees
 app.get('/employees', (req, res) => {
-  // Construct SQL query to select all employees
   const query = `SELECT * FROM employees`;
 
-  // Execute the query
   db.query(query, (err, results) => {
     if (err) {
       console.error('Error fetching employees:', err);
-      res.status(500).send('Error fetching employees');
+      res.status(500).json({ message: 'Error fetching employees' });
     } else {
       res.status(200).json(results);
     }
