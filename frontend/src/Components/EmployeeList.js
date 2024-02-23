@@ -56,6 +56,8 @@ const EmployeeList = () => {
     e.preventDefault();
     try {
       const updatedEmployee = { ...updateFormData };
+      // Format the date of birth (dob) to YYYY-MM-DD format
+      updatedEmployee.dob = new Date(updateFormData.dob).toISOString().split('T')[0];
       await axios.put(`https://task-emp.onrender.com/employees/${selectedEmployeeId}`, updatedEmployee);
       fetchEmployees();
       setIsUpdateFormVisible(false);
@@ -65,6 +67,7 @@ const EmployeeList = () => {
       setError('Failed to update employee');
     }
   };
+  
 
   const handleChange = (e) => {
     setUpdateFormData({ ...updateFormData, [e.target.name]: e.target.value });
