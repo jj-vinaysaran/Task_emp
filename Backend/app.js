@@ -3,12 +3,14 @@ const express = require('express');
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const nodemailer = require('nodemailer');
 
 const app = express();
 const port = 5000;
 
 app.use(bodyParser.json());
 app.use(cors());
+
 
 const db = mysql.createConnection({
   host: 'bde4zoi3bbkeqcmansvo-mysql.services.clever-cloud.com',
@@ -29,6 +31,71 @@ db.connect((err) => {
 db.on('error', (err) => {
   console.error('MySQL connection error:', err);
 });
+
+// Admin credentials (replace with actual credentials)
+const adminCredentials = {
+  username: 'admin',
+  password: 'Saran@533',
+  email: 'vinayjayjay12@gmail.com'
+};
+
+// Track login attempts
+let loginAttempts = {};
+
+// Login route
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+
+  // Get IP address
+  const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  console.log('IP:', ip);
+
+  // Check if credentials match
+  if (username === adminCredentials.username && password === adminCredentials.password) {
+    // Successful login, grant access
+    res.status(200).send('Login successful');
+
+    // Reset login attempts
+    loginAttempts[ip] = 0;
+  } else {
+    // Invalid credentials, increment login attempt count
+    loginAttempts[ip] = loginAttempts[ip] ? loginAttempts[ip] + 1 : 1;
+
+    // Send security alert if login attempts exceed threshold
+    if (loginAttempts[ip] >= 1) {
+      sendSecurityAlert(ip); // Pass user's email address and login attempts to the security alert function
+    }
+
+    // Display error message
+    res.status(401).send('Invalid credentials');
+  }
+});
+
+// Function to send security alert email
+function sendSecurityAlert(ip) {
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'vinay05saran03@gmail.com', // your email
+      pass: 'nhhj vwzn tprh jrga' // your password
+    }
+  });
+
+  const mailOptions = {
+    from: 'vinay05saran03@gmail.com',
+    to: adminCredentials.email, // admin's email
+    subject: 'Security Alert: Anonymous Login Attempts Detected',
+    text: ` login attempt  detected  at  ${new Date()}.`
+  };
+
+  transporter.sendMail(mailOptions, function(error, info) {
+    if (error) {
+      console.log('Error sending email:', error);
+    } else {
+      console.log('Email sent:', info.response);
+    }
+  });
+}
 
 // Add a new employee
 app.post('/api/employees', (req, res) => {
