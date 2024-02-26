@@ -178,13 +178,15 @@ app.get('/employees', (req, res) => {
 
   db.query(query, (err, results) => {
     if (err) {
-      console.error('Error fetching employees:', err);
-      res.status(500).json({ message: 'Error fetching employees' });
+      console.error('Error fetching employees:', err); // Log the error to the console
+      return res.status(500).json({ message: 'Error fetching employees', error: err }); // Return detailed error response
     } else {
-      res.status(200).json(results);
+      console.log('Employees fetched successfully:', results); // Log the fetched employees
+      return res.status(200).json(results); // Return the fetched employees
     }
   });
 });
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
