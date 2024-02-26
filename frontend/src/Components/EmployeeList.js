@@ -27,6 +27,7 @@ const EmployeeList = () => {
       setLoading(true);
       const response = await axios.get('https://task-emp.onrender.com/employees');
       setEmployees(response.data);
+      console.log(response)
       setLoading(false);
     } catch (error) {
       console.error('Error fetching employees:', error);
