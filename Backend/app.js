@@ -106,10 +106,6 @@ app.post('/api/employees', (req, res) => {
     return res.status(400).json({ message: 'Incomplete data' });
   }
 
-  // Check if dob is provided in a valid format
-  if (!moment(dob, 'YYYY-MM-DD', true).isValid()) {
-    return res.status(400).json({ message: 'Invalid date of birth format. Please provide in YYYY-MM-DD format.' });
-  }
 
   // Calculate age based on the provided date of birth
   const age = moment().diff(dob, 'years');
