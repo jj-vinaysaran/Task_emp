@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import './adminLogin.css';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; // Import Navigate and useHistory
 import axios from 'axios';
 
 const AdminLogin = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loggedIn, setLoggedIn] = useState(false); // State to track login status
+  const navigate = useNavigate(); // Get the history object
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,15 +18,19 @@ const AdminLogin = () => {
       // Reset input fields after successful submission
       setUsername('');
       setPassword('');
-      // Redirect to employee form upon successful login
-      window.location.href = '/employee-form';
-      
+      // Set loggedIn state to true upon successful login
+      setLoggedIn(true);
     } catch (error) {
       alert("Invalid Credentials");
       console.error('Error logging in:', error);
       // Handle error here, such as displaying an error message to the user
     }
   };
+
+  // If logged in, redirect to employee form
+  if (loggedIn) {
+    navigate("/employee-form");
+  }
 
   return (
     <div className="admin-login-container">
@@ -55,7 +61,6 @@ const AdminLogin = () => {
           />
         </div>
         <button type="submit" className="login-button">Login</button>
-        {/* <Link to='/employee-form' className="register-link">Register</Link> */}
       </form>
     </div>
   );
