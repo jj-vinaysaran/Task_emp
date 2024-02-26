@@ -18,7 +18,9 @@ const AdminLogin = () => {
       setPassword('');
       // Redirect to employee form upon successful login
       window.location.href = '/employee-form';
+      
     } catch (error) {
+      alert("Invalid Credentials");
       console.error('Error logging in:', error);
       // Handle error here, such as displaying an error message to the user
     }
