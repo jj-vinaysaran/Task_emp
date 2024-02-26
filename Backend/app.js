@@ -4,6 +4,7 @@ const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
+const moment = require('moment');
 
 const app = express();
 const port = 5000;
@@ -27,12 +28,11 @@ db.connect((err) => {
   console.log('MySQL connected');
 });
 
-// Handle database connection errors
+
 db.on('error', (err) => {
   console.error('MySQL connection error:', err);
 });
 
-// Admin credentials (replace with actual credentials)
 const adminCredentials = {
   username: 'admin',
   password: 'Saran@533',
@@ -100,14 +100,32 @@ function sendSecurityAlert(ip) {
 // Add a new employee
 app.post('/api/employees', (req, res) => {
   const { name, employeeId, department, dob, gender, designation, salary } = req.body;
+
+  // Check if all required fields are provided
   if (!name || !employeeId || !department || !dob || !gender || !designation || !salary) {
     return res.status(400).json({ message: 'Incomplete data' });
   }
+
+  // Check if dob is provided in a valid format
+  if (!moment(dob, 'YYYY-MM-DD', true).isValid()) {
+    return res.status(400).json({ message: 'Invalid date of birth format. Please provide in YYYY-MM-DD format.' });
+  }
+
+  // Calculate age based on the provided date of birth
+  const age = moment().diff(dob, 'years');
+
+  // Check if age is less than 18
+  if (age < 18) {
+    return res.status(400).json({ message: 'Employee must be at least 18 years old' });
+  }
+
+  // Check if name length and salary length are within limits
   if (name.length > 30 || salary.length > 8) {
     return res.status(400).json({ message: 'Invalid data' });
   }
-  const sql =
-    'INSERT INTO employees (name, employeeId, department, dob, gender, designation, salary) VALUES (?, ?, ?, ?, ?, ?, ?)';
+
+  // Proceed to add the employee to the database
+  const sql = 'INSERT INTO employees (name, employeeId, department, dob, gender, designation, salary) VALUES (?, ?, ?, ?, ?, ?, ?)';
   db.query(
     sql,
     [name, employeeId, department, dob, gender, designation, salary],
